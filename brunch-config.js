@@ -42,8 +42,8 @@ exports.config = {
     // Dependencies and current project directories to watch
     watched: [
       "web/static",
-        "test/static",
-        "web/elm",
+      "test/static",
+      "web/elm",
     ],
 
     // Where to compile files to
@@ -59,7 +59,7 @@ exports.config = {
     elmBrunch: {
       elmFolder: "web/elm",
       mainModules: ["EEChat.elm"],
-        outputFolder: "../static/vendor"
+      outputFolder: "../static/vendor"
     }
   },
 
