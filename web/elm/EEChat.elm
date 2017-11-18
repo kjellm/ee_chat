@@ -52,18 +52,24 @@ update msg model =
 -- VIEW
 
 view : Model -> Html Msg
-
 view model =
     if model.nickAccepted == False then
-        span []
-            [ input [ placeholder "nick", onInput UpdateNick, onEnter AcceptNick] []
-            , button [ onClick AcceptNick ] [ text "Enter" ]
-            ]
+        loginView model
     else
-        div []
-            [ pre [] [text model.chatBuffer ]
-            , input [ value model.newMessage, onInput UpdateNewMessage, onEnter AcceptNewMessage ] []
-            ]
+        chatView model
+
+loginView model =
+    span []
+        [ input [ placeholder "nick", onInput UpdateNick, onEnter AcceptNick] []
+        , button [ onClick AcceptNick ] [ text "Enter" ]
+        ]
+
+chatView model =
+    div []
+        [ pre [] [text model.chatBuffer ]
+        , input [ value model.newMessage, onInput UpdateNewMessage, onEnter AcceptNewMessage ] []
+        ]
+
 
 onEnter : Msg -> Attribute Msg
 onEnter msg =

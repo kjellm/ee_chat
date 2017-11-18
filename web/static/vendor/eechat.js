@@ -8327,9 +8327,45 @@ var _user$project$EEChat$UpdateNick = function (a) {
 	return {ctor: 'UpdateNick', _0: a};
 };
 var _user$project$EEChat$AcceptNewMessage = {ctor: 'AcceptNewMessage'};
+var _user$project$EEChat$chatView = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$pre,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text(model.chatBuffer),
+					_1: {ctor: '[]'}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$input,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$value(model.newMessage),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html_Events$onInput(_user$project$EEChat$UpdateNewMessage),
+							_1: {
+								ctor: '::',
+								_0: _user$project$EEChat$onEnter(_user$project$EEChat$AcceptNewMessage),
+								_1: {ctor: '[]'}
+							}
+						}
+					},
+					{ctor: '[]'}),
+				_1: {ctor: '[]'}
+			}
+		});
+};
 var _user$project$EEChat$AcceptNick = {ctor: 'AcceptNick'};
-var _user$project$EEChat$view = function (model) {
-	return _elm_lang$core$Native_Utils.eq(model.nickAccepted, false) ? A2(
+var _user$project$EEChat$loginView = function (model) {
+	return A2(
 		_elm_lang$html$Html$span,
 		{ctor: '[]'},
 		{
@@ -8366,40 +8402,10 @@ var _user$project$EEChat$view = function (model) {
 					}),
 				_1: {ctor: '[]'}
 			}
-		}) : A2(
-		_elm_lang$html$Html$div,
-		{ctor: '[]'},
-		{
-			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$pre,
-				{ctor: '[]'},
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html$text(model.chatBuffer),
-					_1: {ctor: '[]'}
-				}),
-			_1: {
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$input,
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$value(model.newMessage),
-						_1: {
-							ctor: '::',
-							_0: _elm_lang$html$Html_Events$onInput(_user$project$EEChat$UpdateNewMessage),
-							_1: {
-								ctor: '::',
-								_0: _user$project$EEChat$onEnter(_user$project$EEChat$AcceptNewMessage),
-								_1: {ctor: '[]'}
-							}
-						}
-					},
-					{ctor: '[]'}),
-				_1: {ctor: '[]'}
-			}
 		});
+};
+var _user$project$EEChat$view = function (model) {
+	return _elm_lang$core$Native_Utils.eq(model.nickAccepted, false) ? _user$project$EEChat$loginView(model) : _user$project$EEChat$chatView(model);
 };
 var _user$project$EEChat$main = _elm_lang$html$Html$beginnerProgram(
 	{model: _user$project$EEChat$model, view: _user$project$EEChat$view, update: _user$project$EEChat$update})();
