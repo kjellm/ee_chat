@@ -2,7 +2,7 @@ defmodule EeChat.UserSocket do
   use Phoenix.Socket
 
   ## Channels
-  channel "room", EeChat.RoomChannel
+  channel "room:*", EEChat.RoomChannel
 
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket
