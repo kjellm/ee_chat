@@ -5,7 +5,6 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Json.Decode as JD exposing (field)
 import Json.Encode as JE
-
 import Platform.Cmd
 import Phoenix.Socket
 import Phoenix.Channel
@@ -21,6 +20,7 @@ main =
         }
 
 
+
 -- CONSTANTS
 
 
@@ -28,7 +28,9 @@ socketServer =
     "ws://localhost:4000/socket/websocket"
 
 
+
 -- MODEL
+
 
 type Msg
     = AcceptNick
@@ -43,9 +45,10 @@ type alias Model =
     { nick : String
     , nickAccepted : Bool
     , newMessage : String
-    , chatBuffer: String
-    , phxSocket: Phoenix.Socket.Socket Msg
+    , chatBuffer : String
+    , phxSocket : Phoenix.Socket.Socket Msg
     }
+
 
 initPhxSocket : Phoenix.Socket.Socket Msg
 initPhxSocket =
@@ -69,16 +72,17 @@ init =
     ( model, Cmd.none )
 
 
+
 -- SUBSCRIPTIONS
+
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-  Phoenix.Socket.listen model.phxSocket PhoenixMsg
+    Phoenix.Socket.listen model.phxSocket PhoenixMsg
+
 
 
 -- COMMANDS
-
-
 -- PHOENIX STUFF
 
 
@@ -95,25 +99,31 @@ chatMessageDecoder =
         (field "body" JD.string)
 
 
+
 -- UPDATE
+
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         UpdateNick nick ->
             { model | nick = nick } ! []
+
         UpdateNewMessage str ->
             { model | newMessage = str } ! []
+
         AcceptNick ->
             let
                 channel =
                     Phoenix.Channel.init "room:lobby"
+
                 ( phxSocket, phxCmd ) =
                     Phoenix.Socket.join channel model.phxSocket
             in
                 ( { model | phxSocket = phxSocket, nickAccepted = True }
                 , Cmd.map PhoenixMsg phxCmd
                 )
+
         SendMessage ->
             let
                 payload =
@@ -132,17 +142,22 @@ update msg model =
                   }
                 , Cmd.map PhoenixMsg phxCmd
                 )
+
         ReceiveChatMessage raw ->
             case JD.decodeValue chatMessageDecoder raw of
                 Ok chatMessage ->
                     { model
-                        | chatBuffer = model.chatBuffer ++ "\n" ++ chatMessage.nick ++ "> " ++  chatMessage.body }
-                    ! []
+                        | chatBuffer = model.chatBuffer ++ "\n" ++ chatMessage.nick ++ "> " ++ chatMessage.body
+                    }
+                        ! []
+
                 Err error ->
                     ( model, Cmd.none )
+
         PhoenixMsg msg ->
             let
-                ( phxSocket, phxCmd ) = Phoenix.Socket.update msg model.phxSocket
+                ( phxSocket, phxCmd ) =
+                    Phoenix.Socket.update msg model.phxSocket
             in
                 ( { model | phxSocket = phxSocket }
                 , Cmd.map PhoenixMsg phxCmd
@@ -152,6 +167,7 @@ update msg model =
 
 -- VIEW
 
+
 view : Model -> Html Msg
 view model =
     if model.nickAccepted == False then
@@ -159,15 +175,17 @@ view model =
     else
         chatView model
 
+
 loginView model =
     span []
-        [ input [ placeholder "nick", onInput UpdateNick, onEnter AcceptNick] []
+        [ input [ placeholder "nick", onInput UpdateNick, onEnter AcceptNick ] []
         , button [ onClick AcceptNick ] [ text "Enter" ]
         ]
 
+
 chatView model =
     div []
-        [ pre [] [text model.chatBuffer ]
+        [ pre [] [ text model.chatBuffer ]
         , input [ value model.newMessage, onInput UpdateNewMessage, onEnter SendMessage ] []
         ]
 
